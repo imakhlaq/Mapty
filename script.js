@@ -23,15 +23,12 @@ navigator.geolocation?.getCurrentPosition(
 
     //from leaflet API
 
-    const map = L.map('map').setView([latitude, longitude], 16);
+    const map = L.map('map').setView([latitude, longitude], 14);
 
-    L.tileLayer(
-      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      {
-        attribution:
-          'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-      }
-    ).addTo(map);
+    L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 18,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    }).addTo(map);
 
     L.marker([latitude, longitude])
       .addTo(map)
@@ -42,4 +39,5 @@ navigator.geolocation?.getCurrentPosition(
     prompt('Please Allow location acces');
   }
 );
+
 
