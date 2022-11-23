@@ -23,6 +23,7 @@ class workout {
 }
 
 class Running extends workout {
+  type = 'running';
   constructor(coords, distance, duration, cadance) {
     super(coords, distance, duration);
     this.cadance = cadance;
@@ -34,7 +35,8 @@ class Running extends workout {
   }
 }
 
-class cycling extends workout {
+class Cycling extends workout {
+  type = 'cycling';
   constructor(coords, distance, duration, elevation) {
     super(coords, distance, duration);
     this.elevation = elevation;
@@ -50,11 +52,13 @@ class App {
   //to make map varible global
   map;
   mapEvent;
+  //to store workouts
+  workoutArr = [];
 
   constructor() {
     this._getposition();
     inputType.addEventListener('change', this._toggleElivationField);
-    form.addEventListener('submit', this._showMarker.bind(this));
+    form.addEventListener('submit', this._workout.bind(this));
   }
 
   _getposition() {
@@ -102,7 +106,7 @@ class App {
   }
 
   //and showing maker on clikced
-  _showMarker(e) {
+  _workout(e) {
     e.preventDefault();
     //clearing input feilds
     inputCadence.value =
@@ -113,9 +117,40 @@ class App {
 
     //taking out lat and lang from event
     const { lat, lng } = this.mapEvent.latlng;
-    //distance from input
+    //////////////////////////////////////////////////////
+    //to store workout object
+    let workout;
+    // take all data inpult from feilds
+    const distance = inputDistance.value;
+    const duration = inputDuration.value;
+    const type = inputType.value;
+    //helper function for checking
+    //if all the values are positive
+    const allPos = (...value) => value.every(e => e >= 0);
+    const allNum = (...value) => value.every(e => e === Number);
+    //checking for valid inputs for each type
+    //running
+    if (type === 'running') {
+      if (!allPos(distance, duration) || !allNum(distance, duration))
+        return alert('Invalid Inputs');
+      const cadance = inputCadence.value;
+      workout = new Running([lat, lng], distance, duration, cadance);
+    }
+    //cyclig
+    if (type === 'cycling') {
+      if (!allPos(distance, duration) || !allNum(distance, duration))
+        return alert('Invalid Inputs');
+      const elevation = inputElevation.value;
+      workout = new Running([lat, lng], distance, duration, elevation);
+    }
+    //pushing workout in wokout array
+    this.workoutArr.push(workout);
+    //showing marker
+    this._showMarker(workout);
+  }
+  _showMarker(workout) {
     //adding marker on clicked location
-    L.marker([lat, lng])
+    L.marker(workout.coords)
       .addTo(this.map)
       .bindPopup(
         L.popup({
@@ -123,7 +158,7 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: 'running-popup',
+          className: `${workout.type}-popup`,
         })
       )
       .setPopupContent('jio')
