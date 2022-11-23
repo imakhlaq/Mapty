@@ -121,29 +121,40 @@ class App {
     //to store workout object
     let workout;
     // take all data inpult from feilds
-    const distance = inputDistance.value;
-    const duration = inputDuration.value;
+    const distance = 10; // +inputDistance.value;
+    const duration = 32; // +inputDuration.value;
+
     const type = inputType.value;
+    console.log(type);
+
     //helper function for checking
     //if all the values are positive
-    const allPos = (...value) => value.every(e => e >= 0);
-    const allNum = (...value) => value.every(e => e === Number);
+    const allPos = (...input) => input.every(inp => inp > 0);
+    const allNum = (...value) => value.every(e => Number.isFinite(e));
+
     //checking for valid inputs for each type
     //running
     if (type === 'running') {
-      if (!allPos(distance, duration) || !allNum(distance, duration))
+      const cadance = 323; // +inputCadence.value;
+      if (
+        !allNum(distance, duration, cadance) ||
+        !allPos(distance, duration, cadance)
+      ) {
         return alert('Invalid Inputs');
-      const cadance = inputCadence.value;
+      }
+
       workout = new Running([lat, lng], distance, duration, cadance);
     }
     //cyclig
     if (type === 'cycling') {
-      if (!allPos(distance, duration) || !allNum(distance, duration))
+      const elevation = 212; // +inputElevation.value;
+      if (!allPos(distance, duration) || !allNum(distance, duration, elevation))
         return alert('Invalid Inputs');
-      const elevation = inputElevation.value;
-      workout = new Running([lat, lng], distance, duration, elevation);
+
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     //pushing workout in wokout array
+    console.log(workout);
     this.workoutArr.push(workout);
     //showing marker
     this._showMarker(workout);
