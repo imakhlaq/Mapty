@@ -11,7 +11,41 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
-//changing cadence base on cycling or running
+class workout {
+  //these are instance feilds ( they are simmiler for every instance and properties might differ in each object )
+  id = Date.now();
+  date = new Date();
+  constructor(coords, distance, duration) {
+    this.coords = coords;
+    this.distance = distance;
+    this.duration = duration;
+  }
+}
+
+class Running extends workout {
+  constructor(coords, distance, duration, cadance) {
+    super(coords, distance, duration);
+    this.cadance = cadance;
+    this.calcPace();
+  }
+  calcPace() {
+    this.pace = this.distance / this.duration;
+    return this.pace;
+  }
+}
+
+class cycling extends workout {
+  constructor(coords, distance, duration, elevation) {
+    super(coords, distance, duration);
+    this.elevation = elevation;
+    this.calcSpeed();
+  }
+  calcSpeed() {
+    this.pace = this.duration / (this.distance / 60);
+    return this.pace;
+  }
+}
+
 class App {
   //to make map varible global
   map;
@@ -22,6 +56,7 @@ class App {
     inputType.addEventListener('change', this._toggleElivationField);
     form.addEventListener('submit', this._showMarker.bind(this));
   }
+
   _getposition() {
     //getting user location thorugh browser API
     if (navigator.geolocation) {
@@ -51,6 +86,7 @@ class App {
 
     this.map.on('click', this._showform.bind(this));
   }
+
   _showform(event) {
     //we have to make this event also global
     this.mapEvent = event;
@@ -59,10 +95,12 @@ class App {
     //focusing distance feild
     inputDistance.focus();
   }
+  //changing cadence base on cycling or running
   _toggleElivationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
+
   //and showing maker on clikced
   _showMarker(e) {
     e.preventDefault();
