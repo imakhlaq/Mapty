@@ -11,7 +11,6 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
-
 //changing cadence base on cycling or running
 class App {
   //to make map varible global
@@ -57,6 +56,7 @@ class App {
     this.mapEvent = event;
     //showing form
     form.classList.remove('hidden');
+    //focusing distance feild
     inputDistance.focus();
   }
   _toggleElivationField() {
