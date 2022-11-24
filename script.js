@@ -63,8 +63,8 @@ class App {
   workoutArr = [];
 
   constructor() {
-    this._getposition();
     this._getDatafromLocal();
+    this._getposition();
     inputType.addEventListener('change', this._toggleElivationField);
     form.addEventListener('submit', this._workout.bind(this));
     containerWorkouts.addEventListener('click', this._moveToWorkOut.bind(this));
