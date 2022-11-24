@@ -100,9 +100,11 @@ class App {
     this.map.on('click', this._showform.bind(this));
 
     //loading previous makers
-    this.workoutArr.forEach(workout => {
-      this._showMarker(workout);
-    });
+    if (this.workoutArr.length != 0) {
+      this.workoutArr.forEach(work => {
+        this._showMarker(work);
+      });
+    }
   }
 
   _showform(event) {
@@ -135,8 +137,8 @@ class App {
     //to store workout object
     let workout;
     // take all data inpult from feilds
-    const distance = 10; // +inputDistance.value;
-    const duration = 32; // +inputDuration.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
 
     const type = inputType.value;
     console.log(type);
@@ -149,7 +151,7 @@ class App {
     //checking for valid inputs for each type
     //running
     if (type === 'running') {
-      const cadance = 323; // +inputCadence.value;
+      const cadance = +inputCadence.value;
       if (
         !allNum(distance, duration, cadance) ||
         !allPos(distance, duration, cadance)
@@ -161,7 +163,7 @@ class App {
     }
     //cyclig
     if (type === 'cycling') {
-      const elevation = 212; // +inputElevation.value;
+      const elevation = +inputElevation.value;
       if (!allPos(distance, duration) || !allNum(distance, duration, elevation))
         return alert('Invalid Inputs');
 
