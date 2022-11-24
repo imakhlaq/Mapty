@@ -63,8 +63,8 @@ class App {
   workoutArr = [];
 
   constructor() {
-    this._getDatafromLocal();
     this._getposition();
+    this._getDatafromLocal();
     inputType.addEventListener('change', this._toggleElivationField);
     form.addEventListener('submit', this._workout.bind(this));
     containerWorkouts.addEventListener('click', this._moveToWorkOut.bind(this));
@@ -270,9 +270,11 @@ class App {
     const data = JSON.parse(localStorage.getItem('workout'));
     //setting data back
     this.workoutArr = data;
-    this.workoutArr.forEach(workout => {
-      this._renderWorkout(workout);
-    });
+    if (this.workoutArr.length != 0) {
+      this.workoutArr.forEach(workout => {
+        this._renderWorkout(workout);
+      });
+    }
   }
 
   //for clearing local api
