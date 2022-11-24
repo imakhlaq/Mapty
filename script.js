@@ -24,7 +24,6 @@ class workout {
     this.tittle = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[monthNo]
     }`;
-    
   }
 }
 
@@ -65,8 +64,10 @@ class App {
 
   constructor() {
     this._getposition();
+    this._getDatafromLocal();
     inputType.addEventListener('change', this._toggleElivationField);
     form.addEventListener('submit', this._workout.bind(this));
+    containerWorkouts.addEventListener('click', this._moveToWorkOut.bind(this));
   }
 
   _getposition() {
@@ -97,6 +98,11 @@ class App {
     //this map object contain a on method which is like a addeventlistner and when you click on it also passed and event object to the function
 
     this.map.on('click', this._showform.bind(this));
+
+    //loading previous makers
+    this.workoutArr.forEach(workout => {
+      this._showMarker(workout);
+    });
   }
 
   _showform(event) {
@@ -168,6 +174,8 @@ class App {
     this._showMarker(workout);
 
     this._renderWorkout(workout);
+    //putting data in local strage
+    this._putDataInLocal();
   }
 
   _showMarker(workout) {
@@ -183,7 +191,9 @@ class App {
           className: `${workout.type}-popup`,
         })
       )
-      .setPopupContent('jio')
+      .setPopupContent(
+        `${workout.type == 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.tittle}`
+      )
       .openPopup();
   }
   _renderWorkout(workout) {
@@ -234,6 +244,38 @@ class App {
     }
 
     form.insertAdjacentHTML('afterend', html);
+  }
+  _moveToWorkOut(e) {
+    const clickedEl = e.target.closest('.workout');
+    //guard claus
+    if (!clickedEl) return; //
+
+    const clickedElid = clickedEl.getAttribute('data-id');
+    const findworkout = this.workoutArr.find(work => work.id === +clickedElid);
+
+    this.map.setView(findworkout.coords, 18, {
+      animation: true,
+      pan: {
+        duration: 1,
+      },
+    });
+  }
+
+  _putDataInLocal() {
+    localStorage.setItem('workouts', JSON.stringify(this.workoutArr));
+  }
+  _getDatafromLocal() {
+    const data = JSON.parse(localStorage.getItem('workout'));
+    //setting data back
+    this.workoutArr = data;
+    this.workoutArr.forEach(workout => {
+      this._renderWorkout(workout);
+    });
+  }
+
+  //for clearing local api
+  localRest() {
+    localStorage.clear();
   }
 }
 const app = new App();
