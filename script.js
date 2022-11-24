@@ -100,7 +100,7 @@ class App {
     this.map.on('click', this._showform.bind(this));
 
     //loading previous makers
-    if (this.workoutArr.length != 0) {
+    if (this.workoutArr.length) {
       this.workoutArr.forEach(work => {
         this._showMarker(work);
       });
@@ -270,7 +270,7 @@ class App {
     const data = JSON.parse(localStorage.getItem('workout'));
     //setting data back
     this.workoutArr = data;
-    if (this.workoutArr.length != 0) {
+    if (this.workoutArr.length) {
       this.workoutArr.forEach(workout => {
         this._renderWorkout(workout);
       });
